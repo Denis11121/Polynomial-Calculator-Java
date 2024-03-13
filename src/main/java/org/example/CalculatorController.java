@@ -103,19 +103,19 @@ public class CalculatorController {
             return polynomial;
         }
 
-        // Remove all whitespaces for consistent parsing
+        // sterge spatiile libere
         input = input.replaceAll("\\s+", "");
 
-        // Split the input by "+" or "-" to separate terms
+        // imparte input-ul "+" or "-" pentru a separa termenii
         String[] terms = input.split("(?=[-+])");
 
         for (String term : terms) {
             double coefficient = 1.0;
             int exponent = 0;
 
-            // Handle the case where the term starts with a negative sign followed by x^
+            // pt cazul x^
             if (term.matches("-x\\^.*")) {
-                term = "-1" + term.substring(1); // Change -x^ to -1x^
+                term = "-1" + term.substring(1); // schimba -x^ in -1x^
             }
 
             if (term.contains("x^")) {
@@ -124,12 +124,12 @@ public class CalculatorController {
                     coefficient = parts[0].isEmpty() ? 1.0 : Double.parseDouble(parts[0]);
                     exponent = Integer.parseInt(parts[1]);
                 } catch (NumberFormatException e) {
-                    // Handle invalid term exception
+
                     view.setResultPolynomial("Error: Invalid term");
                     throw new IllegalArgumentException("Invalid term: " + term);
                 }
             } else if (term.contains("x")) {
-                // Term with implicit exponent 1 (e.g., "2x" or "-x")
+                // exponenti impliciti
                 try {
                     if (term.equals("x") || term.equals("-x") || term.equals("+x")) {
                         coefficient = term.startsWith("-") ? -1.0 : 1.0;
@@ -138,16 +138,16 @@ public class CalculatorController {
                     }
                     exponent = 1;
                 } catch (NumberFormatException e) {
-                    // Handle invalid term exception
+
                     view.setResultPolynomial("Error: Invalid term");
                     throw new IllegalArgumentException("Invalid term: " + term);
                 }
             } else {
-                // Constant term (e.g., "4" or "-5")
+                // termeni constanti
                 try {
                     coefficient = Double.parseDouble(term);
                 } catch (NumberFormatException e) {
-                    // Handle invalid term exception
+
                     view.setResultPolynomial("Error: Invalid term");
                     throw new IllegalArgumentException("Invalid term: " + term);
                 }
