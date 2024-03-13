@@ -98,7 +98,6 @@ public class Polynomial {
                 }
             }
         }
-
         return new Polynomial[] { quotient, remainder };
     }
 
@@ -106,18 +105,18 @@ public class Polynomial {
 
 
     public int degree() {
-        if (terms.isEmpty()) return -1; // undefined for zero polynomial
+        if (terms.isEmpty()) return -1;
         return terms.keySet().stream().mapToInt(Integer::intValue).max().getAsInt();
     }
     public boolean isZero() {
         return terms.isEmpty();
     }
     public double leadingCoefficient() {
-        if (terms.isEmpty()) return 0.0; // undefined for zero polynomial
+        if (terms.isEmpty()) return 0.0;
         return terms.get(degree());
     }
     public double getCoefficient(int exponent) {
-        return terms.getOrDefault(exponent, 0.0); // Return 0.0 for non-existent exponents
+        return terms.getOrDefault(exponent, 0.0); //returneaza 0,0 pt exponenti neexistenti
     }
 
     public Polynomial derivative() {
