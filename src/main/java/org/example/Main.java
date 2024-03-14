@@ -17,7 +17,6 @@ public class Main {
         Polynomial resultSub=polynomial1.sub(polynomial2);
 
         Polynomial resultMultiply=polynomial1.multiply(polynomial2);
-
         Polynomial resultDerivative=polynomial1.derivative();
 
         Polynomial resultIntegral=polynomial1.integral();
@@ -35,6 +34,7 @@ public class Main {
         System.out.println("Integral result: "+resultIntegral);
         System.out.println("Polynomial 1: " + polynomial1);
         System.out.println("Polynomial 2: " + polynomial2);
+
         System.out.println("Quotient (Polynomial 1 / Polynomial 2): " + quotient);
         System.out.println("Remainder (Polynomial 1 / Polynomial 2): " + remainder);
     }
