@@ -15,6 +15,7 @@ public class CalculatorController {
         this.view.addIntListener(new IntListener());
         this.view.addDivListener(new DivListener());
     }
+
     class AddListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
