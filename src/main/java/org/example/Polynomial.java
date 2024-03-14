@@ -78,7 +78,7 @@ public class Polynomial {
         for (Map.Entry<Integer, Double> term : this.terms.entrySet()) {
             Integer thisExponent = term.getKey();
             Double thisCoefficient = term.getValue();
-            remainder.addTerms(thisExponent, thisCoefficient); // Copy terms to remainder
+            remainder.addTerms(thisExponent, thisCoefficient); // copiaza termenii in remainder
         }
         while (remainder.degree() >= divisor.degree()) {
             int expDiff = remainder.degree() - divisor.degree();
@@ -91,7 +91,7 @@ public class Polynomial {
             Polynomial termProduct = divisor.multiply(termPoly);
             remainder = remainder.sub(termProduct);
 
-            // Remove any terms with zero coefficients from the remainder
+            // sterge termenii cu coeficient zero
             for (Map.Entry<Integer, Double> term : remainder.terms.entrySet()) {
                 if (term.getValue() == 0.0) {
                     remainder.terms.remove(term.getKey());
