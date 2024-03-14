@@ -8,6 +8,7 @@ import java.awt.event.ActionListener;
 
 public class CalculatorController {
     private CalculatorView view;
+    private Convertor convertor=new Convertor();
 
     public CalculatorController(CalculatorView view) {
         this.view = view;
@@ -22,46 +23,62 @@ public class CalculatorController {
     class AddListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
+            try{
             String firstPolynomialStr = view.getFirstPolynomial();
             String secondPolynomialStr = view.getSecondPolynomial();
-            Polynomial polynomial1 = parsePolynomial(firstPolynomialStr);
-            Polynomial polynomial2 = parsePolynomial(secondPolynomialStr);
+            Polynomial polynomial1 = convertor.parsePolynomial(firstPolynomialStr);
+            Polynomial polynomial2 = convertor.parsePolynomial(secondPolynomialStr);
             Polynomial result = polynomial1.add(polynomial2);
             view.setResultPolynomial(result.toString());
         }
+        catch (IllegalArgumentException ex) {
+            view.setResultPolynomial("Error: " + ex.getMessage());
+        }
+        }
+
     }
 
     class SubListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
-            String firstPolynomialStr = view.getFirstPolynomial();
-            String secondPolynomialStr = view.getSecondPolynomial();
-            Polynomial polynomial1 = parsePolynomial(firstPolynomialStr);
-            Polynomial polynomial2 = parsePolynomial(secondPolynomialStr);
-            Polynomial result = polynomial1.sub(polynomial2);
-            view.setResultPolynomial(result.toString());
+            try {
+                String firstPolynomialStr = view.getFirstPolynomial();
+                String secondPolynomialStr = view.getSecondPolynomial();
+                Polynomial polynomial1 = convertor.parsePolynomial(firstPolynomialStr);
+                Polynomial polynomial2 = convertor.parsePolynomial(secondPolynomialStr);
+                Polynomial result = polynomial1.sub(polynomial2);
+                view.setResultPolynomial(result.toString());
+            } catch (IllegalArgumentException ex) {
+                view.setResultPolynomial("Error: " + ex.getMessage());
+            }
         }
     }
 
     class MulListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
+            try{
             String firstPolynomialStr = view.getFirstPolynomial();
             String secondPolynomialStr = view.getSecondPolynomial();
-            Polynomial polynomial1 = parsePolynomial(firstPolynomialStr);
-            Polynomial polynomial2 = parsePolynomial(secondPolynomialStr);
+            Polynomial polynomial1 = convertor.parsePolynomial(firstPolynomialStr);
+            Polynomial polynomial2 = convertor.parsePolynomial(secondPolynomialStr);
             Polynomial result = polynomial1.multiply(polynomial2);
             view.setResultPolynomial(result.toString());
         }
+           catch (IllegalArgumentException ex) {
+            view.setResultPolynomial("Error: " + ex.getMessage());
+        }
+    }
     }
 
     class DivListener implements ActionListener{
         @Override
         public void actionPerformed(ActionEvent e){
+            try{
             String firstPolynomialStr = view.getFirstPolynomial();
             String secondPolynomialStr = view.getSecondPolynomial();
-            Polynomial polynomial1 = parsePolynomial(firstPolynomialStr);
-            Polynomial polynomial2 = parsePolynomial(secondPolynomialStr);
+            Polynomial polynomial1 = convertor.parsePolynomial(firstPolynomialStr);
+            Polynomial polynomial2 = convertor.parsePolynomial(secondPolynomialStr);
             if (polynomial2.degree() == 0 && polynomial2.getCoefficient(0) == 0.0) {
                 view.setResultPolynomial("Error: Division by zero");
                 throw new IllegalArgumentException("Dividing by zero polynomial is not allowed.");
@@ -78,103 +95,45 @@ public class CalculatorController {
             view.setResultPolynomial("Quotient: " + quotient + ", Remainder: " + remainder);
 
         }
+           catch (IllegalArgumentException ex) {
+            view.setResultPolynomial("Error: " + ex.getMessage());
+        }
+    }
     }
 
     class DerListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
+            try{
             String firstPolynomialStr = view.getFirstPolynomial();
-            Polynomial polynomial1 = parsePolynomial(firstPolynomialStr);
+            Polynomial polynomial1 = convertor.parsePolynomial(firstPolynomialStr);
             Polynomial result = polynomial1.derivative();
             view.setResultPolynomial(result.toString());
         }
+           catch (IllegalArgumentException ex) {
+            view.setResultPolynomial("Error: " + ex.getMessage());
+        }
+    }
     }
 
     class IntListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
+            try{
             String firstPolynomialStr = view.getFirstPolynomial();
-            Polynomial polynomial1 = parsePolynomial(firstPolynomialStr);
+            Polynomial polynomial1 = convertor.parsePolynomial(firstPolynomialStr);
             Polynomial result = polynomial1.integral();
             view.setResultPolynomial(result.toString()+"+C");
         }
+           catch (IllegalArgumentException ex) {
+            view.setResultPolynomial("Error: " + ex.getMessage());
+        }
+    }
     }
 
-    private Polynomial parsePolynomial(String input) {
-        Polynomial polynomial = new Polynomial();
-        if (input == null || input.trim().isEmpty()) {
-            return polynomial;
-        }
 
-        // Eliminăm spațiile
-        input = input.replaceAll("\\s+", "");
 
-        // Dacă începe cu un semn "+", îl eliminăm
-        if (input.startsWith("+")) {
-            input = input.substring(1);
-        }
 
-        // Procesăm fiecare termen separat
-        int index = 0;
-        while (index < input.length()) {
-            char currentChar = input.charAt(index);
-            double coefficient = 0.0; // Coeficient implicit 1
-            int exponent = 0;
-
-            // Verificăm semnul termenului
-            boolean negative = false;
-            if (currentChar == '-') {
-                negative = true;
-                index++;
-            } else if (currentChar == '+') {
-                index++;
-            }
-
-            // Găsim coeficientul
-            StringBuilder coefficientBuilder = new StringBuilder();
-            while (index < input.length() && (Character.isDigit(input.charAt(index)) || input.charAt(index) == '.')) {
-                coefficientBuilder.append(input.charAt(index));
-                index++;
-            }
-            if (coefficientBuilder.length() == 0) {
-                coefficient = 1.0; // Implicit coeficientul este 1 pentru termenii care conțin "x"
-            } else {
-                coefficient = Double.parseDouble(coefficientBuilder.toString());
-            }
-
-            // Dacă mai sunt caractere și ele reprezintă "x"
-            if (index < input.length() && input.charAt(index) == 'x') {
-                index++; // trecem peste 'x'
-                // Dacă următorul caracter este '^', atunci extragem exponentul
-                if (index < input.length() && input.charAt(index) == '^') {
-                    index++; // trecem peste '^'
-                    // Găsim exponentul
-                    StringBuilder exponentBuilder = new StringBuilder();
-                    while (index < input.length() && Character.isDigit(input.charAt(index))) {
-                        exponentBuilder.append(input.charAt(index));
-                        index++;
-                    }
-                    if (exponentBuilder.length() > 0) {
-                        exponent = Integer.parseInt(exponentBuilder.toString());
-                    } else {
-                        exponent = 1; // Exponent implicit este 1
-                    }
-                } else {
-                    exponent = 1; // Dacă nu există '^', atunci exponentul este 1
-                }
-            }
-
-            // Aplicăm semnul negativ dacă este cazul
-            if (negative) {
-                coefficient = -coefficient;
-            }
-
-            // Adăugăm termenul la polinom
-            polynomial.addTerms(exponent, coefficient);
-        }
-
-        return polynomial;
-    }
 
 
 
