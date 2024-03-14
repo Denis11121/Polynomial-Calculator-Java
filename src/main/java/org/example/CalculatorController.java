@@ -141,7 +141,7 @@ public class CalculatorController {
                     }
                     exponent = 1;
                 } catch (NumberFormatException e) {
-                    // Handle invalid term exception
+                    // termeni invalizi
                     view.setResultPolynomial("Error: Invalid term");
                     throw new IllegalArgumentException("Invalid term: " + term);
                 }
