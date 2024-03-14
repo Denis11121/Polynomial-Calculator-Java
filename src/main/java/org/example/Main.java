@@ -17,7 +17,6 @@ public class Main {
         Polynomial resultSub=polynomial1.sub(polynomial2);
 
         Polynomial resultMultiply=polynomial1.multiply(polynomial2);
-
         Polynomial resultDerivative=polynomial1.derivative();
 
         Polynomial resultIntegral=polynomial1.integral();
