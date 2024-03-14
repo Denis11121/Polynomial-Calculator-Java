@@ -72,7 +72,7 @@ public class CalculatorTest {
         expected.addTerms(0, 5.0);
 
         assertEquals(expected.toString(), result.toString());
-        System.out.println("Test sub finished successfully");
+        System.out.println("Testsub finished successfully");
         numberOfTestsPassed++;
 
     }
