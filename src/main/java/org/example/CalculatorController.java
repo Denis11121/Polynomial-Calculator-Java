@@ -150,7 +150,6 @@ public class CalculatorController {
                 try {
                     coefficient = Double.parseDouble(term);
                 } catch (NumberFormatException e) {
-
                     view.setResultPolynomial("Error: Invalid term");
                     throw new IllegalArgumentException("Invalid term: " + term);
                 }
