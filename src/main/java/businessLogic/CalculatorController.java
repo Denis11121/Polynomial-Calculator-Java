@@ -1,6 +1,7 @@
-package GUI;
+package businessLogic;
 
 import DATA.Polynomial;
+import GUI.CalculatorView;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -105,58 +106,50 @@ public class CalculatorController {
             return polynomial;
         }
 
-        // sterge spatiile
+        // Eliminăm spațiile
         input = input.replaceAll("\\s+", "");
 
-        // daca se incepe cu semnul +
+        // Dacă începe cu un semn "+", îl eliminăm
         if (input.startsWith("+")) {
             input = input.substring(1);
         }
 
-        //separa inputul cu + sau - pentru termeni
+        // Separăm termenii folosind + sau -
         String[] terms = input.split("(?=[-+])");
 
         for (String term : terms) {
-            double coefficient = 1.0;
+            double coefficient = 0.0; // Modificăm aici pentru a ține cont de coeficientul implicit 0
             int exponent = 0;
 
-            // cand se incepe cu semnul - si este urmat de x^
+            // Dacă termenul începe cu -x^, îl convertim la -1x^
             if (term.matches("-x\\^.*")) {
-                term = "-1" + term.substring(1); // schimbam -x^ cu -1x
+                term = "-1" + term.substring(1);
             }
 
+            // Încercăm să identificăm coeficientul și exponentul
             if (term.contains("x^")) {
                 String[] parts = term.split("x\\^");
-                if (parts[0].matches("[\\d-]*")) { // se cauta numere sau -
-                    coefficient = parts[0].isEmpty() ? 1.0 : Double.parseDouble(parts[0]);
+                // Verificăm și setăm coeficientul
+                if (!parts[0].isEmpty()) {
+                    coefficient = Double.parseDouble(parts[0]);
                 } else {
-                    coefficient = 1.0; // Implicit coefficient of 1
+                    coefficient = 1.0; // Coeficient implicit 1
                 }
                 exponent = Integer.parseInt(parts[1]);
             } else if (term.contains("x")) {
-                // termeni cu exponent implicit, ex: x, 2x
-                try {
-                    if (term.equals("x") || term.equals("-x") || term.equals("+x")) {
-                        coefficient = term.startsWith("-") ? -1.0 : 1.0;
-                    } else {
-                        coefficient = Double.parseDouble(term.substring(0, term.indexOf("x")));
-                    }
-                    exponent = 1;
-                } catch (NumberFormatException e) {
-                    // termeni invalizi
-                    view.setResultPolynomial("Error: Invalid term");
-                    throw new IllegalArgumentException("Invalid term: " + term);
+                // Dacă termenul conține "x" dar nu are exponent, este un x simplu sau -x simplu
+                if (term.equals("x") || term.equals("-x")) {
+                    coefficient = term.startsWith("-") ? -1.0 : 1.0;
+                } else {
+                    coefficient = Double.parseDouble(term.substring(0, term.indexOf("x")));
                 }
+                exponent = 1;
             } else {
-                // termeni constanti
-                try {
-                    coefficient = Double.parseDouble(term);
-                } catch (NumberFormatException e) {
-                    view.setResultPolynomial("Error: Invalid term");
-                    throw new IllegalArgumentException("Invalid term: " + term);
-                }
+                // Termen constant
+                coefficient = Double.parseDouble(term);
             }
 
+            // Adăugăm termenul la polinom
             polynomial.addTerms(exponent, coefficient);
         }
 
@@ -164,10 +157,9 @@ public class CalculatorController {
     }
 
 
-
-    public static void main(String[] args) {
+/*    public static void main(String[] args) {
         CalculatorView view = new CalculatorView();
         CalculatorController controller = new CalculatorController(view);
         view.setVisible(true);
-    }
+    }*/
 }
