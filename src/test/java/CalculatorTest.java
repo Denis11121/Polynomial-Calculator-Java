@@ -1,4 +1,4 @@
-import org.example.Polynomial;
+import DATA.Polynomial;
 import org.junit.*;
 
 import static org.junit.Assert.assertEquals;

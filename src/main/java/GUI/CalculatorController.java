@@ -1,4 +1,6 @@
-package org.example;
+package GUI;
+
+import DATA.Polynomial;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
