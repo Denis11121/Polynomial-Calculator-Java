@@ -103,33 +103,36 @@ public class CalculatorController {
             return polynomial;
         }
 
-        // sterge spatiile libere
+        // sterge spatiile
         input = input.replaceAll("\\s+", "");
 
-        // imparte input-ul "+" or "-" pentru a separa termenii
+        // daca se incepe cu semnul +
+        if (input.startsWith("+")) {
+            input = input.substring(1);
+        }
+
+        //separa inputul cu + sau - pentru termeni
         String[] terms = input.split("(?=[-+])");
 
         for (String term : terms) {
             double coefficient = 1.0;
             int exponent = 0;
 
-            // pt cazul x^
+            // cand se incepe cu semnul - si este urmat de x^
             if (term.matches("-x\\^.*")) {
-                term = "-1" + term.substring(1); // schimba -x^ in -1x^
+                term = "-1" + term.substring(1); // schimbam -x^ cu -1x
             }
 
             if (term.contains("x^")) {
                 String[] parts = term.split("x\\^");
-                try {
+                if (parts[0].matches("[\\d-]*")) { // se cauta numere sau -
                     coefficient = parts[0].isEmpty() ? 1.0 : Double.parseDouble(parts[0]);
-                    exponent = Integer.parseInt(parts[1]);
-                } catch (NumberFormatException e) {
-
-                    view.setResultPolynomial("Error: Invalid term");
-                    throw new IllegalArgumentException("Invalid term: " + term);
+                } else {
+                    coefficient = 1.0; // Implicit coefficient of 1
                 }
+                exponent = Integer.parseInt(parts[1]);
             } else if (term.contains("x")) {
-                // exponenti impliciti
+                // termeni cu exponent implicit, ex: x, 2x
                 try {
                     if (term.equals("x") || term.equals("-x") || term.equals("+x")) {
                         coefficient = term.startsWith("-") ? -1.0 : 1.0;
@@ -138,7 +141,7 @@ public class CalculatorController {
                     }
                     exponent = 1;
                 } catch (NumberFormatException e) {
-
+                    // Handle invalid term exception
                     view.setResultPolynomial("Error: Invalid term");
                     throw new IllegalArgumentException("Invalid term: " + term);
                 }
@@ -158,6 +161,7 @@ public class CalculatorController {
 
         return polynomial;
     }
+
 
 
     public static void main(String[] args) {
