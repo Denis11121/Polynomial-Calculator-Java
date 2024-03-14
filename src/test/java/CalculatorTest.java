@@ -158,7 +158,7 @@ public class CalculatorTest {
         expected.addTerms(1, 4.0);
 
         assertEquals(expected.toString(), result.toString());
-        System.out.println("Test integral integral successfully");
+        System.out.println("Test integral finished successfully");
         numberOfTestsPassed++;
 
     }
