@@ -114,39 +114,59 @@ public class CalculatorController {
             input = input.substring(1);
         }
 
-        // Separăm termenii folosind + sau -
-        String[] terms = input.split("(?=[-+])");
-
-        for (String term : terms) {
-            double coefficient = 0.0; // Modificăm aici pentru a ține cont de coeficientul implicit 0
+        // Procesăm fiecare termen separat
+        int index = 0;
+        while (index < input.length()) {
+            char currentChar = input.charAt(index);
+            double coefficient = 0.0; // Coeficient implicit 1
             int exponent = 0;
 
-            // Dacă termenul începe cu -x^, îl convertim la -1x^
-            if (term.matches("-x\\^.*")) {
-                term = "-1" + term.substring(1);
+            // Verificăm semnul termenului
+            boolean negative = false;
+            if (currentChar == '-') {
+                negative = true;
+                index++;
+            } else if (currentChar == '+') {
+                index++;
             }
 
-            // Încercăm să identificăm coeficientul și exponentul
-            if (term.contains("x^")) {
-                String[] parts = term.split("x\\^");
-                // Verificăm și setăm coeficientul
-                if (!parts[0].isEmpty()) {
-                    coefficient = Double.parseDouble(parts[0]);
-                } else {
-                    coefficient = 1.0; // Coeficient implicit 1
-                }
-                exponent = Integer.parseInt(parts[1]);
-            } else if (term.contains("x")) {
-                // Dacă termenul conține "x" dar nu are exponent, este un x simplu sau -x simplu
-                if (term.equals("x") || term.equals("-x")) {
-                    coefficient = term.startsWith("-") ? -1.0 : 1.0;
-                } else {
-                    coefficient = Double.parseDouble(term.substring(0, term.indexOf("x")));
-                }
-                exponent = 1;
+            // Găsim coeficientul
+            StringBuilder coefficientBuilder = new StringBuilder();
+            while (index < input.length() && (Character.isDigit(input.charAt(index)) || input.charAt(index) == '.')) {
+                coefficientBuilder.append(input.charAt(index));
+                index++;
+            }
+            if (coefficientBuilder.length() == 0) {
+                coefficient = 1.0; // Implicit coeficientul este 1 pentru termenii care conțin "x"
             } else {
-                // Termen constant
-                coefficient = Double.parseDouble(term);
+                coefficient = Double.parseDouble(coefficientBuilder.toString());
+            }
+
+            // Dacă mai sunt caractere și ele reprezintă "x"
+            if (index < input.length() && input.charAt(index) == 'x') {
+                index++; // trecem peste 'x'
+                // Dacă următorul caracter este '^', atunci extragem exponentul
+                if (index < input.length() && input.charAt(index) == '^') {
+                    index++; // trecem peste '^'
+                    // Găsim exponentul
+                    StringBuilder exponentBuilder = new StringBuilder();
+                    while (index < input.length() && Character.isDigit(input.charAt(index))) {
+                        exponentBuilder.append(input.charAt(index));
+                        index++;
+                    }
+                    if (exponentBuilder.length() > 0) {
+                        exponent = Integer.parseInt(exponentBuilder.toString());
+                    } else {
+                        exponent = 1; // Exponent implicit este 1
+                    }
+                } else {
+                    exponent = 1; // Dacă nu există '^', atunci exponentul este 1
+                }
+            }
+
+            // Aplicăm semnul negativ dacă este cazul
+            if (negative) {
+                coefficient = -coefficient;
             }
 
             // Adăugăm termenul la polinom
@@ -155,6 +175,8 @@ public class CalculatorController {
 
         return polynomial;
     }
+
+
 
 
 /*    public static void main(String[] args) {
