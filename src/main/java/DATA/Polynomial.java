@@ -67,7 +67,7 @@ public class Polynomial {
 
     public Polynomial[] divideWithRemainder(Polynomial divisor) {
         if(divisor.degree()>this.degree()) {
-            throw new IllegalArgumentException("Denominator can not have a bigger exponent then numinator");
+            throw new IllegalArgumentException("Denominator can not have a bigger exponent than numinator");
         }
         if (divisor.degree() == 0 && divisor.getCoefficient(0) == 0.0) {
             throw new IllegalArgumentException("Dividing by zero polynomial is not allowed.");
