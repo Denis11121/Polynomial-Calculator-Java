@@ -1,4 +1,4 @@
-# PT2024_30223_Samoila_Denis_Assignment_1
+# Polynomial-Calculator
 
 
 
